@@ -80,7 +80,7 @@ bool patchMemory(pid_t pid, const std::vector<Patch>& patches, uintptr_t base_ad
 
     for (const auto& patch : patches) {
         uintptr_t patch_address = base_address + patch.offset;
-        if (debug_enabled) std::cout << "正在修改地址: " << std::hex << patch_address << std::endl;
+        if (debug_enabled) std::cout << "正在hook函数: " << std::hex << "隐藏" << std::endl;
 
         if (lseek(fd, patch_address, SEEK_SET) == -1) {
             if (debug_enabled) std::cerr << "无法跳转到地址: " << patch_address << std::endl;
@@ -168,7 +168,7 @@ void start_game(int choice, std::string& package_name) {
             break;
         case 4:
             if (debug_enabled) std::cout << "启动游戏 4...\n";
-            package_name = "com.vng.pubgmobile";
+            package_name = "com.pubg.vng";
             startGameActivity(package_name.c_str(), "com.epicgames.ue4.SplashActivity");
             break;
         default:
@@ -203,23 +203,31 @@ void run_cheat(int choice) {
         return;
     }
 
-    std::vector<Patch> patches = {
-        { 0x167378, stringToHex("80 02 00 B5") },
-        { 0x18F290, stringToHex("07 00 00 14") },
-        { 0x1677F4, stringToHex("0E 00 00 14") },
-        { 0x3C38CC, stringToHex("E8 00 00 35") },
-        { 0x3C19C4, stringToHex("0E 00 00 14") },
-        { 0x18F858, stringToHex("42 01 00 B5") },
-        { 0x3F6CB0, stringToHex("B3 01 00 B5") },
-        { 0x3B222C, stringToHex("E3 02 00 B5") },
-        { 0x2EC690, stringToHex("24 00 00 14") },
-        // { 0x312A30, stringToHex("") },        
+    const char* library_name_anort = "libanort.so"; 
+    uintptr_t base_address_anort = getBaseAddress(pid, library_name_anort);
+    if (base_address_anort == 0) {
+        std::cerr << "无法获取库的基地址: " << library_name_anort << std::endl;
+        return;
+    }
+
+    std::vector<Patch> patches = { 
+        // { 0x, stringToHex("") }, 
+
     };
 
     std::vector<Patch> patchess = {
-        { 0x2DB8378, stringToHex("3E 66 E6 3F") },
+        // { 0x, stringToHex("") }, 
+
     };
 
+    std::vector<Patch> patchesss = {
+        // { 0x, stringToHex("") }, 
+
+    };
+
+
+     //system("pkill -f python");
+     //system("kill $(lsof | grep 'lib5.so' | awk '{print $2}') >/dev/null 2>&1");
     if (!patchMemory(pid, patches, base_address_anogs)) {
         std::cerr << "libanogs.so 补丁应用失败。" << std::endl;
         return;
@@ -227,6 +235,11 @@ void run_cheat(int choice) {
 
     if (!patchMemory(pid, patchess, base_address_ue4)) {
         std::cerr << "libUE4.so 补丁应用失败。" << std::endl;
+        return;
+    }
+
+    if (!patchMemory(pid, patchesss, base_address_anort)) {
+        std::cerr << "libanort.so 补丁应用失败。" << std::endl;
         return;
     }
 
