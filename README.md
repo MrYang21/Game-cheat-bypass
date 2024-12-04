@@ -3,22 +3,35 @@
 编译教程
 
 Linux :
+
 git clone https://github.com/MrYang21/Game-cheat-bypass.git
+
 cd Game-cheat-bypass
+
 mkdir build
+
 cd build
+
 cmake ..
+
 make
 
 Window :
+
 git clone https://github.com/MrYang21/Game-cheat-bypass.git
+
 cd Game-cheat-bypass
+
 mkdir build
+
 cd build
+
 cmake -G "MinGW Makefiles" ..
+
 mingw32-make
 
 为智障人士录制的编译视频：
+
 https://www.bilibili.com/video/BV1Z7mfYpEUz/?vd_source=dcc95df531d3ab0f18c902143fe1d6d2
 
 包含功能 
